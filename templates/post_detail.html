@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
+{%load static%}
+
 {%block content%}
 
 <div class="card text-center">
   <div class="card-header">
-  <img src="..." class="card-img-middle" alt="...">
-    Featured
+    {%if post.image%}
+  <img src="{{post.image.url}}" class="card-img-middle" alt="..." width="500" height="450">
+    {%else%}
+    <img src={% static 'placeholder.png' %}
+    {%endif%}
+
   </div>
   <div class="card-body">
       <h5 class="card-title">{{post.title}}</h5>
