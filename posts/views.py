@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.template.defaultfilters import title
 from posts.models import Post
 from posts.forms import PostForm, PostForm2, CommentForm
+from django.contrib.auth.decorators import login_required
 import random
 
 def test_view(request):
@@ -11,24 +13,26 @@ def test_view(request):
 def main_page_view(request):
     return render(request, 'base.html')
 
-
+@login_required(login_url='/login/')
 def post_list_view(request):
     posts = Post.objects.all()
-    return render(request, "post_list.html", context={"posts": posts})
+    return render(request, "posts/post_list.html", context={"posts": posts})
 
+@login_required(login_url='/login/')
 def post_detail_view(request, post_id):
     post = Post.objects.get(id=post_id)
     form = CommentForm()
-    return render(request, "post_detail.html", context={"post": post, "form": form})
+    return render(request, "posts/post_detail.html", context={"post": post, "form": form})
 
+@login_required(login_url='/login/')
 def post_create_view(request):
     if request.method == "GET":
         form = PostForm2()
-        return render(request, "post_create.html", context={"form": form})
+        return render(request, "posts/post_create.html", context={"form": form})
     if request.method == "POST":
         form = PostForm2(request.POST, request.FILES)
         if not form.is_valid():
-            return render(request, "post_create.html", context={"form": form})
+            return render(request, "posts/post_create.html", context={"form": form})
         form.save()
         return redirect("/posts/")
 
@@ -37,7 +41,7 @@ def comment_create_view(request, post_id):
     if request.method == "POST":
         form = CommentForm(request.POST)
         if not form.is_valid():
-            return render(request, "comment_create.html", context={"form": form})
+            return render(request, "posts/comment_create.html", context={"form": form})
         comment = form.save(commit=False)
         comment.post = post
         comment.save()
