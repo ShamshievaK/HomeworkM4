@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from posts.views import test_view, main_page_view, post_list_view, post_detail_view, post_create_view
-from users.views import register_view, login_view, logout_view
+from posts.views import test_view, main_page_view, post_list_view, post_detail_view, post_create_view, post_update_view, comment_create_view
+from users.views import register_view, login_view, logout_view, profile_view
 from django.contrib.staticfiles.urls import static
 from django.conf import settings
 
@@ -31,5 +31,8 @@ urlpatterns = ([                                # ссылка-путеводи�
     path("register/", register_view),
     path("login/", login_view),
     path("logout/", logout_view),
+    path("profile/", profile_view),
+    path("posts/<int:post_id>/update/", post_update_view),
+    path("posts/<int:post_id>/comment/create/", comment_create_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static
     (settings.STATIC_URL, document_root=settings.STATIC_ROOT))

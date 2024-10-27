@@ -8,22 +8,40 @@
     {% else %}
       <img src="{% static 'placeholder.png' %}" alt="Placeholder Image">
     {% endif %}
+
+
   </div>
+
   <div class="card-body">
     <h5 class="card-title">{{ post.title }}</h5>
     <p class="card-text">{{ post.content }}</p>
     <p class="card-text">{{ post.rate }}</p>
     <p class="card-text">{{ post.created_at }}</p>
     <p class="card-text">{{ post.updated_at }}</p>
+
+{%if post.author == request.user%}
+<a href="/posts/{{post.id}}/update/" class="btn btn-primary">Edit</a>
+{%endif%}
   </div>
   <div class="card-footer text-body-secondary">
     2 days ago
   </div>
 </div>
 
-<h2>Comments: </h2>
-{% for comment in post.comments.all %}
-  <p>{{ comment.content }}</p>
-  <p>{{ comment.created_at }}</p>
-{% endfor %}
+
+
+<form action="/posts/{{post.id}}/comment/create/" method="post" enctype="multipart/form-data">
+  {%csrf_token%}
+  {{form.as_p}}
+  <button type="submit">Comment</button>
+  <form>
+  {% for comment in comments %}
+<div class="card" style="width: 18rem">
+  <div class="card-body">
+    <h5 class="card-title">{{comment.text}}</h5>
+  </div>
+</div>
+{%endfor%}
+<!--  <input type="text" name="text" placeholder="Comment here" style="width: 300px">-->
+
 {% endblock %}

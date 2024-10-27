@@ -9,6 +9,8 @@ class PostForm(forms.Form):
     image = forms.ImageField()
     title = forms.CharField()
     content = forms.CharField()
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+    rate = forms.IntegerField()
 
     def clean(self):
         cleaned_data = super().clean()  # проверяет все данные на правильность
@@ -47,11 +49,17 @@ class PostForm2(forms.ModelForm):
         return rate
 
 
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('text',)
-        labels = {'text': 'Комментарий'}
+class CommentForm(forms.Form):
+        text = forms.CharField(
+            widget=forms.Textarea(
+                attrs={
+                    "placeholder": "Введите текст",
+                    "rows": 5,
+                    "cols": 20,
+                    "class": "form-control",
+                }
+            )
+        )
 
 
 class SearchForm(forms.Form):

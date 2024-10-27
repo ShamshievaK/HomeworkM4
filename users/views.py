@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.template.defaulttags import comment
+
+from posts.models import Post
+from users.models import Profile
 from users.forms import RegisterForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -11,11 +15,14 @@ def register_view(request):
         return render(request, 'users/register.html', context={'form': form})
 
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if not form.is_valid():
             return render(request, 'users/register.html', context={'form': form})
         form.cleaned_data.pop('password_confirm')
-        User.objects.create_user(**form.cleaned_data)
+        image = form.cleaned_data.pop('image')
+        age = form.cleaned_data.pop('age')
+        user = User.objects.create_user(**form.cleaned_data)
+        Profile.objects.create(user=user, image=image, age=age)
         return redirect("/")
 
 
@@ -45,4 +52,9 @@ def logout_view(request):
         logout(request)
         return redirect("/")
 
+
+def profile_view(request):
+    if request.method == 'GET':
+        posts = Post.objects.filter(author=request.user)
+        return render(request, 'users/profile.html', context={'posts': posts})
 
