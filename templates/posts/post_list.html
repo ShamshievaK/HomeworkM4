@@ -3,6 +3,10 @@
 {%load static%}
 
 {%block content%}
+<form action="/posts/" method="get">
+  {{form.as_p}}
+  <button type="submit">Search</button>
+</form>
     {%for post in posts%}
 <div class="card text-center">
   <div class="card-header">
@@ -25,6 +29,18 @@
   </div>
 </div>
     {%endfor%}
+
+
+<div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+  {%for i in max_pages%}
+  {%if request.GET%}
+  <a class="btn btn-primary" href="{{request.get_full_path}}&page={{i}}">{{i}}</a>
+  {%else%}
+  <a class="btn btn-primary" href="/posts/?page{{i}}">{{i}}</a>
+
+  {%endif%}
+  {%endfor%}
+</div>
 
 {%endblock%}
 

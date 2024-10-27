@@ -25,7 +25,7 @@ urlpatterns = ([                                # ссылка-путеводи�
     path('admin/', admin.site.urls),
     path('test/', test_view),
     path("", main_page_view),
-    path("posts/", post_list_view),
+    path("posts/", post_list_view, name='post_list'),
     path("posts/<int:post_id>/", post_detail_view),
     path("posts/create/", post_create_view),
     path("register/", register_view),
